@@ -5,6 +5,7 @@ use App\Contracts\AuthorServiceContract;
 use App\Http\Requests\AuthorBookRequest;
 use App\Http\Requests\AuthorRequest;
 use App\Models\Author;
+use App\Models\Book;
 use App\Services\Book\BookService;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -149,6 +150,27 @@ class AuthorService implements AuthorServiceContract {
             return true;
         } catch (\Throwable $t) {
             return false;
+        }
+    }
+
+    /**
+     * Get Authors Data Unless Assigned Book Author
+     * @param int $bookId
+     * @return Collection
+     */
+    public static function getUnlessAssignedBookAuthor(int $bookId): Collection 
+    {
+        try {   
+            $book = Book::with(["authors"])->find($bookId);
+            if (empty($book)) return collect();
+            $authors = new Author;
+            if ($book->authors->count() > 0) {
+                $authors = $authors->whereNotIn("id",$book->authors->pluck("id")->toArray());
+            }
+            $authors = $authors->get();
+            return $authors;
+        } catch (\Throwable $t) {
+            return collect();
         }
     }
 }

@@ -28,7 +28,10 @@ class BookRequest extends FormRequest
                 ],
                 "isbn" => [
                     "required",
-                ]
+                ],
+                "author_id" => [
+                    "required",
+                ],
             ];
         } else if ($this->getMethod() === "PATCH") {
             return [
@@ -37,7 +40,13 @@ class BookRequest extends FormRequest
                 ],
                 "isbn" => [
                     "required",
-                ]
+                ],
+                "author_id" => [
+                    "required",
+                ],
+                "role" => [
+                    "required",
+                ],
             ];
         }
     }
@@ -47,6 +56,8 @@ class BookRequest extends FormRequest
         return [
             "name.required" => "Author name must be filled!",
             "isbn.required" => "ISBN must be filled!",
+            "author_id.required" => "Please select at least one author!",
+            "role.required" => "Please select role!",
         ];
     }
 }

@@ -60,4 +60,11 @@ interface AuthorServiceContract {
      * @return boolean
      */
     public static function assignBook(int $authorId, AuthorBookRequest $request): bool;
+
+    /**
+     * Get Authors Data Unless Assigned Book Author
+     * @param int $bookId
+     * @return Collection
+     */
+    public static function getUnlessAssignedBookAuthor(int $bookId): Collection;
 }

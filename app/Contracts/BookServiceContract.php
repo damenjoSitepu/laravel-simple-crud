@@ -1,5 +1,7 @@
 <?php
 namespace App\Contracts;
+
+use App\Http\Requests\BookAuthorRequest;
 use App\Http\Requests\BookRequest;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -56,4 +58,22 @@ interface BookServiceContract {
      * @return Collection
      */
     public static function getUnlessAssignedAuthorBook(int $authorId): Collection;
+
+    /**
+     * Assign A Author To Certain Book
+     *
+     * @param integer $bookId
+     * @param BookAuthorRequest $request
+     * @return array
+     */
+    public static function assignAuthor(int $bookId, BookAuthorRequest $request): array;
+
+    /**
+     * Delete Author For Certain Book
+     *
+     * @param integer $bookId
+     * @param integer $authorId
+     * @return array
+     */
+    public static function deleteAuthor(int $bookId, int $authorId): array;
 }

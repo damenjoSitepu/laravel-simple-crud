@@ -4,10 +4,12 @@
 <div class="px-4 my-4">
     <div class="flex w-full justify-between">
         <div class="w-5/6">
-            @include("components.title",["title" => "Book"])
+            @include("components.title",["title" => "Book | Author"])
         </div>
         <div class="w-1/6">
-            <a href="{{ route("book.create") }}" class="btn btn-primary capitalize w-full">Create</a>
+            <a href="{{ route("book.author.assign",[
+                "id" => $id,
+            ]) }}" class="btn btn-primary capitalize w-full">Assign Author</a>
         </div>
     </div>
 
@@ -17,39 +19,34 @@
     {{-- Contents --}}
     <div>
         <div class="overflow-x-auto">
-            @if ($books->count() === 0) 
-                <p class="block text-center">No Books Data!</p>
+            @if ($bookAuthors->count() === 0) 
+                <p class="block text-center">No Book Authors Data!</p>
             @else 
                 <table class="table">
                     <thead>
                         <tr>
                         <th></th>
                         <th>Name</th>
+                        <th>Role</th>
                         <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($books as $book)
+                        @foreach ($bookAuthors as $author)
                             <tr class="hover">
-                                <th>{{ $loop->iteration }}</th>
-                                <td>{{ $book->name }}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $author->name }}</td>
+                                <td>{{ $author->pivot->role }}</td>
                                 <td>
                                     {{-- Delete --}}
-                                    <form class="inline-block" method="post" action="{{ route('book.delete',[
-                                        'id' => $book->id,
+                                    <form class="inline-block" method="post" action="{{ route('book.author.delete',[
+                                        'id' => $id,
+                                        'authorId' => $author->id,
                                     ]) }}">
                                         @csrf  
                                         @method('DELETE')
                                         <button class="badge badge-error text-white">Delete</button>
                                     </form>
-                                    {{-- Update --}}
-                                    <a href="{{ route("book.update", [
-                                        "id" => $book->id,
-                                    ]) }}" class="badge badge-warning capitalize w-fit">Update</a>
-                                    {{-- View Author Who Wrote This Book --}}
-                                    <a href="{{ route("book.author.index", [
-                                        "id" => $book->id
-                                    ]) }}" class="badge badge-accent capitalize w-fit">View Author</a>
                                 </td>
                             </tr>
                         @endforeach
