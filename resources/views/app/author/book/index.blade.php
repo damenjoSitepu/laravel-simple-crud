@@ -4,7 +4,7 @@
 <div class="px-4 my-4">
     <div class="flex w-full justify-between">
         <div class="w-5/6">
-            @include("components.title",["title" => "Author | Book"])
+            @include("components.title",["title" => "Author (" . $author->name . ") | Book"])
         </div>
         <div class="w-1/6">
             <a href="{{ route("author.book.assign",[
@@ -27,6 +27,7 @@
                         <tr>
                         <th></th>
                         <th>Name</th>
+                        <th>Role</th>
                         <th>Actions</th>
                         </tr>
                     </thead>
@@ -35,6 +36,7 @@
                             <tr class="hover">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $book->name }}</td>
+                                <td>{{ $book->pivot->role }}</td>
                             </tr>
                         @endforeach
                     </tbody>

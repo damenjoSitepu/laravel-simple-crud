@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Util\RoleService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -35,5 +36,17 @@ class Book extends Model
     {
         return $this->belongsToMany(Author::class,"author_book","book_id","author_id")
                     ->withPivot(["role"]);
+    }
+
+    /**
+     * Many Authors With Ordered Items!
+     *
+     * @return BelongsToMany
+     */
+    public function orderedAuthors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class,"author_book","book_id","author_id")
+                    ->withPivot(["role"])
+                    ->orderByRaw(RoleService::getOrderStatement());
     }
 }

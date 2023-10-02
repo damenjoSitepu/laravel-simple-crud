@@ -7,6 +7,7 @@ use App\Http\Requests\AuthorRequest;
 use App\Models\Author;
 use App\Models\Book;
 use App\Services\Book\BookService;
+use App\Services\Util\RoleService;
 use Illuminate\Database\Eloquent\Collection;
 
 class AuthorService implements AuthorServiceContract {
@@ -34,6 +35,7 @@ class AuthorService implements AuthorServiceContract {
         "UPDATE_FAIL" => "Fail to update author!",
         "ASSIGN_SUCCESS" => "Successfully assign books to this author!",
         "ASSIGN_FAIL" => "Fail to assign books to this author!",
+        "OWNER_IS_EXISTS" => "This book is already owned by someone!",
     ];
 
     /**
@@ -137,19 +139,21 @@ class AuthorService implements AuthorServiceContract {
      *
      * @param integer $authorId
      * @param AuthorBookRequest $request
-     * @return boolean
+     * @return array
      */
-    public static function assignBook(int $authorId, AuthorBookRequest $request): bool
+    public static function assignBook(int $authorId, AuthorBookRequest $request): array
     {
         try {
             $author = Author::find($authorId);
-            if (empty($author)) return false;
+            if (empty($author)) return [false, self::getMessage()["ASSIGN_FAIL"]];
             $bookId = $request->book_id;
-            if (empty(BookService::find($bookId))) return false;
-            $author->books()->attach($bookId);
-            return true;
+            if (empty($book = BookService::find($bookId))) return [false, self::getMessage()["ASSIGN_FAIL"]];
+            if (! RoleService::checkOwnerIsExists($book, "", false)) return [false, self::getMessage()["ASSIGN_FAIL"]];
+            $role = RoleService::getMember();
+            $author->books()->attach($bookId, compact(["role"]));
+            return [true, self::getMessage()["ASSIGN_SUCCESS"]];
         } catch (\Throwable $t) {
-            return false;
+            return [false, self::getMessage()["ASSIGN_FAIL"]];
         }
     }
 

@@ -8,6 +8,7 @@ use App\Http\Requests\AuthorRequest;
 use App\Services\Author\AuthorBookService;
 use App\Services\Author\AuthorService;
 use App\Services\Book\BookService;
+use App\Services\Util\RoleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -37,6 +38,17 @@ class AuthorController extends Controller
     public function book(int $id): View|RedirectResponse
     {
         try {
+            $author = AuthorService::find($id);
+            if (empty($author)) {
+                return redirect()->route(AuthorService::getRoutes()["INDEX"])
+                                ->with("error_message",AuthorService::getMessage()["FIND_FAIL"]);
+            }
+        } catch (\Throwable $t) {
+            return redirect()->route(AuthorService::getRoutes()["INDEX"])
+                            ->with("error_message",AuthorService::getMessage()["FIND_FAIL"]);
+        }
+
+        try {
             $authorBooks = AuthorBookService::findBooks($id);
             if (! $authorBooks) {
                 return redirect()->route(AuthorService::getRoutes()["INDEX"])
@@ -49,7 +61,7 @@ class AuthorController extends Controller
 
         return view("app.author.book.index", [
             "title" => "Author | Book",
-            ...compact(["id","authorBooks"]),
+            ...compact(["id","authorBooks","author"]),
         ]);
     }
 
@@ -166,16 +178,17 @@ class AuthorController extends Controller
     {
         try {
             DB::beginTransaction();
-            if (! AuthorService::assignBook($id,$request)) {
-                return redirect()->route(AuthorService::getRoutes()["BOOK"], compact(["id"]))
-                                ->with("error_message",AuthorService::getMessage()["ASSIGN_FAIL"]);
+            [$assignedBook, $message] = AuthorService::assignBook($id,$request);
+            if (! $assignedBook) {            
+                return redirect()->route(AuthorService::getRoutes()["BOOK_ASSIGN"], compact(["id"]))
+                                ->with("error_message",$message);
             }
             DB::commit();
             return redirect()->route(AuthorService::getRoutes()["BOOK"], compact(["id"]))
                             ->with("success_message",AuthorService::getMessage()["ASSIGN_SUCCESS"]);
         } catch (\Throwable $t) {
             DB::rollback();
-            return redirect()->route(AuthorService::getRoutes()["BOOK"], compact(["id"]))
+            return redirect()->route(AuthorService::getRoutes()["BOOK_ASSIGN"], compact(["id"]))
                             ->with("error_message",AuthorService::getMessage()["ASSIGN_FAIL"]);
         }
     }

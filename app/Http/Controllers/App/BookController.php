@@ -175,6 +175,17 @@ class BookController extends Controller
     public function author(int $id): View|RedirectResponse
     {
         try {
+            $book = BookService::find($id);
+            if (empty($book)) {
+                return redirect()->route(BookService::getRoutes()["INDEX"])
+                                ->with("error_message",BookService::getMessage()["FIND_FAIL"]);
+            }
+        } catch (\Throwable $t) {
+            return redirect()->route(BookService::getRoutes()["INDEX"])
+                            ->with("error_message",BookService::getMessage()["FIND_FAIL"]);
+        }
+
+        try {
             $bookAuthors = BookAuthorService::findAuthors($id);
             if (! $bookAuthors) {
                 return redirect()->route(BookService::getRoutes()["INDEX"])
@@ -187,7 +198,7 @@ class BookController extends Controller
 
         return view("app.book.author.index", [
             "title" => "Book | Author",
-            ...compact(["id","bookAuthors"]),
+            ...compact(["id","bookAuthors","book"]),
         ]);
     }
 

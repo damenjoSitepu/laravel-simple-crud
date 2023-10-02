@@ -4,7 +4,7 @@
 <div class="px-4 my-4">
     <div class="flex w-full justify-between">
         <div class="w-5/6">
-            @include("components.title",["title" => "Book | Author"])
+            @include("components.title",["title" => "Book (" . $book->name . ") | Author"])
         </div>
         <div class="w-1/6">
             <a href="{{ route("book.author.assign",[

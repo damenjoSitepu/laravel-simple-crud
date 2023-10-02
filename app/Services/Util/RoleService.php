@@ -17,7 +17,24 @@ class RoleService implements RoleServiceContract {
     /**
      * @var string
      */
+    private const ORDER_STATEMENT = "
+        CASE 
+            WHEN role = 'Owner' THEN 1
+            WHEN role = 'Co-Owner' THEN 2 
+            WHEN role = 'Member' THEN 3
+            ELSE 4
+        END
+    ";
+
+    /**
+     * @var string
+     */
     private const OWNER_ROLE = self::ROLES[0];
+
+    /**
+     * @var string
+     */
+    private const MEMBER_ROLE = self::ROLES[1];
 
     /**
      * Get Roles
@@ -27,6 +44,26 @@ class RoleService implements RoleServiceContract {
     public static function getRoles(): array 
     {
         return self::ROLES;
+    }
+
+    /**
+     * Get Order Statement
+     *
+     * @return string
+     */
+    public static function getOrderStatement(): string 
+    {
+        return self::ORDER_STATEMENT;
+    }
+
+    /**
+     * Get Member Role
+     *
+     * @return string
+     */
+    public static function getMember(): string 
+    {
+        return self::MEMBER_ROLE;
     }
 
     /**

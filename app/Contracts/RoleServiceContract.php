@@ -35,4 +35,18 @@ interface RoleServiceContract {
      * @return boolean
      */
     public static function checkOwnerIsExists(Book $book, string $role, bool $matchToRoleInput): bool;
+
+    /**
+     * Get Order Statement
+     *
+     * @return string
+     */
+    public static function getOrderStatement(): string;
+
+    /**
+     * Get Member Role
+     *
+     * @return string
+     */
+    public static function getMember(): string;
 }

@@ -16,7 +16,7 @@ class BookAuthorService implements BookAuthorServiceContract {
         try {
             $book = BookService::find($authorId);
             if (empty($book)) return false;
-            return $book->authors;
+            return $book->orderedAuthors;
         } catch (\Throwable) {
             return false;
         }

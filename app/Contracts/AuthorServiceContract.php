@@ -57,9 +57,9 @@ interface AuthorServiceContract {
      *
      * @param integer $authorId
      * @param AuthorBookRequest $request
-     * @return boolean
+     * @return array
      */
-    public static function assignBook(int $authorId, AuthorBookRequest $request): bool;
+    public static function assignBook(int $authorId, AuthorBookRequest $request): array;
 
     /**
      * Get Authors Data Unless Assigned Book Author

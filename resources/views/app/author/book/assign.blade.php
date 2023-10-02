@@ -9,6 +9,9 @@
         </div>
     </div>
 
+    {{-- Flash Message --}}
+    @include("components.flash-message")
+
     {{-- Input --}}
     <form class="my-5" method="POST" action="{{ route("author.book.store",compact(["id"])) }}">
         @csrf
