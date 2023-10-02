@@ -40,18 +40,6 @@
                     </select>
                     @include("components.error-message", ["attribute" => "author_id"])
                 </div>
-
-                {{-- <div class="w-1/2">
-                    <select class="select select-bordered w-full" name="author_id">
-                        <option disabled selected>Select Role</option>
-                        @if (count($roles) > 0)
-                            @foreach ($roles as $role) 
-                                <option @if(old("role") == $role) selected @endif value="{{ $role }}">{{ $role }}</option>
-                            @endforeach 
-                        @endif
-                    </select>
-                    @include("components.error-message", ["attribute" => "role"])
-                </div> --}}
             </div>
             @endif 
         </div>

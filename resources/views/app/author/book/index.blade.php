@@ -36,7 +36,7 @@
                             <tr class="hover">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $book->name }}</td>
-                                <td>{{ $book->pivot->role }}</td>
+                                <td>{{ optional($book->pivot)->role }}</td>
                             </tr>
                         @endforeach
                     </tbody>

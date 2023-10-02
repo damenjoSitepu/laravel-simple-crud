@@ -36,7 +36,7 @@
                             <tr class="hover">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $author->name }}</td>
-                                <td>{{ $author->pivot->role }}</td>
+                                <td>{{ optional($author->pivot)->role }}</td>
                                 <td>
                                     {{-- Delete --}}
                                     <form class="inline-block" method="post" action="{{ route('book.author.delete',[
